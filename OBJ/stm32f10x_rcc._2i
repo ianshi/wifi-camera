@@ -1,0 +1,6 @@
+-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork -I..\HARDWARE\LED -I..\SYSTEM\delay -I..\SYSTEM\sys -I..\SYSTEM\usart -I..\USER -I..\STM32F10x_FWLib\inc -I..\CORE -I..\HARDWARE\KEY -I..\HARDWARE\EXTI -I..\HARDWARE\WEIGEN -I..\HARDWARE\TIMER -I..\HARDWARE\WWDG -I..\HARDWARE\ESP8266 -I..\HARDWARE\MALLOC -I..\HARDWARE\wifi -I..\HARDWARE\cjson -I..\HARDWARE\OV2640 -I..\HARDWARE\DMA
+-I D:\Users\ianshi\Desktop\…„œÒÕ∑-usart\USER\RTE
+-I "G:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.1.0\Device\Include"
+-I "G:\Program Files\Keil_v5\ARM\CMSIS\Include"
+-D__UVISION_VERSION="514" -DSTM32F10X_HD -DUSE_STDPERIPH_DRIVER
+-o ..\obj\stm32f10x_rcc.o --omf_browse ..\obj\stm32f10x_rcc.crf --depend ..\obj\stm32f10x_rcc.d --feedback "..\OBJ\EXTI.fed" "..\STM32F10x_FWLib\src\stm32f10x_rcc.c"

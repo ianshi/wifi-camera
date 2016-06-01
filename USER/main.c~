@@ -1,0 +1,80 @@
+#include "main.h"
+/*******ov2640驱动程序*******
+    OV_D0-7   接   PB8-15
+    OV_SCL    接   PB6
+    OV_SDA    接   PB7
+ 场 OV_VSYNC  接   PC7
+    OV_PWDN   接   PC6
+    OV_RST    接   PC13
+ 行 OV_HREF   接   PC0
+    OV_PCLK   接   PC1
+
+****************************/
+
+extern u8* ov2640_framebuf;				//帧缓存
+extern volatile u8 check,sending,taking_photo;
+
+int main(void)
+{	
+    u8 key=0,i;
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);// 设置中断优先级分组2
+    delay_init();	    	 //延时函数初始化	
+    LED_Init();		  	 //初始化与LED连接的硬件接口 
+    
+//    WWDG_Init(0X7F,0X5F,WWDG_Prescaler_8);   
+    mem_init();
+    uart_init(115200);
+    KEY_Init();
+    WiFi_RST_INIT();    
+    
+    LED0=1;
+    delay_ms(1500);
+    PC_Usart("LED0\r\n");
+    
+    ov2640_framebuf=mymalloc(JPEGSIZE); 
+    if(!ov2640_framebuf)	//内存分配出错
+ 	{	  
+        LED1=0;        
+        PC_Usart("Overflow!\r\n");
+        while(1);
+        
+				  
+	}   
+   
+
+    if(OV2640_Init())
+    {
+        LED1=0;
+        PC_Usart("OV2640 init fail : %d\r\n",OV2640_Init());
+        while(1);
+        
+    }
+    for(i=0;i<10;i++)
+        delay_ms(1000);
+    
+    ESP8266_init();
+    PC_Usart("Initation ok\r\n");
+    TIM3_Int_Init(2499,7199);//250ms
+    while(1)
+    {
+        delay_ms(10);
+        while(OV2640_VSYNC){
+            key=KEY_Scan();
+            if(key==KEY0_PRES)
+            {
+                LED0=!LED0;
+                delay_ms(1000);
+                ov2640_jpg_photo();
+            }   
+        }
+        if(check==1&&sending==0&&taking_photo==0)
+        {
+            PostToWeb_cmd();
+            check=0;
+        }
+        
+       
+    } 
+}   
+
+
